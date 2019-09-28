@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>springboot配置多数据源 | 我的第一个博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="1,引入依赖  &amp;lt;dependency&amp;gt;         &amp;lt;groupId&amp;gt;com.alibaba&amp;lt;/groupId&amp;gt;         &amp;lt;artifactId&amp;gt;druid&amp;lt;/artifactId&amp;gt;         &amp;lt;version&amp;gt;1.1.10&amp;lt;/version&amp;gt;     &amp;lt;/dependency&amp;gt;">
+<meta name="keywords" content="JAVA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="springboot配置多数据源">
+<meta property="og:url" content="http://yoursite.com/2019/09/28/springboot配置多数据源/index.html">
+<meta property="og:site_name" content="我的第一个博客">
+<meta property="og:description" content="1,引入依赖  &amp;lt;dependency&amp;gt;         &amp;lt;groupId&amp;gt;com.alibaba&amp;lt;/groupId&amp;gt;         &amp;lt;artifactId&amp;gt;druid&amp;lt;/artifactId&amp;gt;         &amp;lt;version&amp;gt;1.1.10&amp;lt;/version&amp;gt;     &amp;lt;/dependency&amp;gt;">
+<meta property="og:locale" content="zh_cn">
+<meta property="og:updated_time" content="2019-09-28T10:19:25.845Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="springboot配置多数据源">
+<meta name="twitter:description" content="1,引入依赖  &amp;lt;dependency&amp;gt;         &amp;lt;groupId&amp;gt;com.alibaba&amp;lt;/groupId&amp;gt;         &amp;lt;artifactId&amp;gt;druid&amp;lt;/artifactId&amp;gt;         &amp;lt;version&amp;gt;1.1.10&amp;lt;/version&amp;gt;     &amp;lt;/dependency&amp;gt;">
+  
+    <link rel="alternate" href="/atom.xml" title="我的第一个博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">我的第一个博客</a>
+      </h1>
+      
+        <h2 id="subtitle-wrap">
+          <a href="/" id="subtitle">这是子标题</a>
+        </h2>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-springboot配置多数据源" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/09/28/springboot配置多数据源/" class="article-date">
+  <time datetime="2019-09-28T10:18:25.000Z" itemprop="datePublished">2019-09-28</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      springboot配置多数据源
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>1,引入依赖</p>
+<blockquote>
+<pre><code>&lt;dependency&gt;
+        &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+        &lt;artifactId&gt;druid&lt;/artifactId&gt;
+        &lt;version&gt;1.1.10&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-jdbc&lt;/artifactId&gt;
+        &lt;version&gt;5.0.8.RELEASE&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+        &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+        &lt;version&gt;3.4.6&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+        &lt;artifactId&gt;mybatis-spring&lt;/artifactId&gt;
+        &lt;version&gt;1.3.2&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+        &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+        &lt;version&gt;1.7.7&lt;/version&gt;
+    &lt;/dependency&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+        &lt;artifactId&gt;log4j-over-slf4j&lt;/artifactId&gt;
+        &lt;version&gt;1.7.7&lt;/version&gt;
+    &lt;/dependency&gt;</code></pre></blockquote>
+<p>2，增加配置文件application.properties</p>
+<pre><code>## 默认的数据源
+master.datasource.url=jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf8&amp;allowMultiQueries=true
+master.datasource.username=root
+master.datasource.password=root
+master.datasource.driverClassName=com.mysql.jdbc.Driver
+
+## 另一个的数据源
+cluster.datasource.url=jdbc:mysql://localhost:3306/test1?useUnicode=true&amp;characterEncoding=utf8
+cluster.datasource.username=root
+cluster.datasource.password=root
+cluster.datasource.driverClassName=com.mysql.jdbc.Driver
+
+# 连接池的配置信息# 初始化大小，最小，最大
+spring.datasource.type=com.alibaba.druid.pool.DruidDataSource
+spring.datasource.initialSize=5
+spring.datasource.minIdle=5
+spring.datasource.maxActive=20
+
+# 配置获取连接等待超时的时间
+spring.datasource.maxWait=60000
+
+# 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+spring.datasource.timeBetweenEvictionRunsMillis=60000
+
+# 配置一个连接在池中最小生存的时间，单位是毫秒
+spring.datasource.minEvictableIdleTimeMillis=300000
+spring.datasource.validationQuery=SELECT 1 FROM DUAL
+spring.datasource.testWhileIdle=true
+spring.datasource.testOnBorrow=false
+spring.datasource.testOnReturn=false
+
+# 打开PSCache，并且指定每个连接上PSCache的大小
+spring.datasource.poolPreparedStatements=true
+spring.datasource.maxPoolPreparedStatementPerConnectionSize=20
+
+# 配置监控统计拦截的filters，去掉后监控界面sql无法统计，&apos;wall&apos;用于防火墙
+spring.datasource.filters=stat,wall,log4j
+
+# 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+spring.datasource.connectionProperties=druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000</code></pre><p>3，创建启动类，增加druid监控</p>
+<pre><code>@ComponentScan(&quot;com.fang&quot;)
+@SpringBootConfiguration
+@EnableAutoConfiguration
+public class TestApplication extends SpringBootServletInitializer {
+
+    public static void main(String[] args) {
+        ConfigurableApplicationContext run = SpringApplication.run(TestApplication.class, args);
+    }
+
+    @Bean
+    public ServletRegistrationBean druidStatViewServlet() {
+        //注册服务
+        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(new StatViewServlet(), &quot;/druid/*&quot;);
+        // 白名单(为空表示,所有的都可以访问,多个IP的时候用逗号隔开)
+        servletRegistrationBean.addInitParameter(&quot;allow&quot;, &quot;127.0.0.1&quot;);
+        // IP黑名单 (存在共同时，deny优先于allow)
+        servletRegistrationBean.addInitParameter(&quot;deny&quot;, &quot;127.0.0.2&quot;);
+        // 设置登录的用户名和密码
+        servletRegistrationBean.addInitParameter(&quot;loginUsername&quot;, &quot;fangxf&quot;);
+        servletRegistrationBean.addInitParameter(&quot;loginPassword&quot;, &quot;123456&quot;);
+        // 是否能够重置数据.
+        servletRegistrationBean.addInitParameter(&quot;resetEnable&quot;, &quot;false&quot;);
+        return servletRegistrationBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean druidStatFilter() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean(new WebStatFilter());
+        // 添加过滤规则
+        filterRegistrationBean.addUrlPatterns(&quot;/*&quot;);
+        // 添加不需要忽略的格式信息
+        filterRegistrationBean.addInitParameter(&quot;exclusions&quot;,&quot;*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*&quot;);
+        System.out.println(&quot;druid初始化成功!&quot;);
+        return filterRegistrationBean;
+    }
+}</code></pre><p>4，增加数据源配置：</p>
+<p>公用配置类DataSourceConfig</p>
+<pre><code>@Configuration
+public class DataSourceConfig {
+
+    @Value(&quot;${spring.datasource.initialSize}&quot;)
+    private int initialSize;
+
+    @Value(&quot;${spring.datasource.minIdle}&quot;)
+    private int minIdle;
+
+    @Value(&quot;${spring.datasource.maxActive}&quot;)
+    private int maxActive;
+
+    @Value(&quot;${spring.datasource.maxWait}&quot;)
+    private int maxWait;
+
+    @Value(&quot;${spring.datasource.timeBetweenEvictionRunsMillis}&quot;)
+    private int timeBetweenEvictionRunsMillis;
+
+    @Value(&quot;${spring.datasource.minEvictableIdleTimeMillis}&quot;)
+    private int minEvictableIdleTimeMillis;
+
+    @Value(&quot;${spring.datasource.validationQuery}&quot;)
+    private String validationQuery;
+
+    @Value(&quot;${spring.datasource.testWhileIdle}&quot;)
+    private boolean testWhileIdle;
+
+    @Value(&quot;${spring.datasource.testOnBorrow}&quot;)
+    private boolean testOnBorrow;
+
+    @Value(&quot;${spring.datasource.testOnReturn}&quot;)
+    private boolean testOnReturn;
+
+    @Value(&quot;${spring.datasource.poolPreparedStatements}&quot;)
+    private boolean poolPreparedStatements;
+
+    @Value(&quot;${spring.datasource.maxPoolPreparedStatementPerConnectionSize}&quot;)
+    private int maxPoolPreparedStatementPerConnectionSize;
+
+    @Value(&quot;${spring.datasource.filters}&quot;)
+    private String filters;
+
+    @Value(&quot;{spring.datasource.connectionProperties}&quot;)
+    private String connectionProperties;
+
+    public void setDataSource(DruidDataSource dataSource){
+        //具体配置
+        dataSource.setInitialSize(initialSize);
+        dataSource.setMinIdle(minIdle);
+        dataSource.setMaxActive(maxActive);
+        dataSource.setMaxWait(maxWait);
+        dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
+        dataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+        dataSource.setValidationQuery(validationQuery);
+        dataSource.setTestWhileIdle(testWhileIdle);
+        dataSource.setTestOnBorrow(testOnBorrow);
+        dataSource.setTestOnReturn(testOnReturn);
+        dataSource.setPoolPreparedStatements(poolPreparedStatements);
+        dataSource.setMaxPoolPreparedStatementPerConnectionSize(maxPoolPreparedStatementPerConnectionSize);
+        try {
+            dataSource.setFilters(filters);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        dataSource.setConnectionProperties(connectionProperties);
+    }
+
+    //set、get方法省略
+    setter()
+    getter()
+}</code></pre><p>主数据源配置MasterDataSourceConfig</p>
+<pre><code>@Configuration
+@MapperScan(basePackages = &quot;com.fang.druid.mapper.master&quot;, sqlSessionFactoryRef = &quot;masterSqlSessionFactory&quot;)
+public class MasterDataSourceConfig extends DataSourceConfig{
+
+    static final String MAPPER_LOCATION = &quot;classpath:mapper/master/*.xml&quot;;
+    @Value(&quot;${master.datasource.url}&quot;)
+    private String url;
+
+    @Value(&quot;${master.datasource.username}&quot;)
+    private String username;
+
+    @Value(&quot;${master.datasource.password}&quot;)
+    private String password;
+
+    @Value(&quot;${master.datasource.driverClassName}&quot;)
+    private String driverClassName;
+
+    @Bean(name = &quot;masterDataSource&quot;)
+    @Primary
+    public DataSource masterDataSource() {
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setDriverClassName(driverClassName);
+        super.setDataSource(dataSource);
+        return dataSource;
+    }
+
+    @Bean(name = &quot;masterTransactionManager&quot;)
+    @Primary
+    public DataSourceTransactionManager masterTransactionManager() {
+        return new DataSourceTransactionManager(masterDataSource());
+    }
+
+    @Bean(name = &quot;masterSqlSessionFactory&quot;)
+    @Primary
+    public SqlSessionFactory masterSqlSessionFactory () throws Exception {
+        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(masterDataSource());
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(MasterDataSourceConfig.MAPPER_LOCATION));
+        return sessionFactory.getObject();
+    }
+}</code></pre><p>副数据源配置ClusterDataSourceConfig</p>
+<pre><code>@Configuration
+@MapperScan(basePackages = &quot;com.fang.druid.mapper.cluster&quot;, sqlSessionFactoryRef = &quot;clusterSqlSessionFactory&quot;)
+public class ClusterDataSourceConfig extends DataSourceConfig{
+    static final String MAPPER_LOCATION = &quot;classpath:mapper/cluster/*.xml&quot;;
+    @Value(&quot;${cluster.datasource.url}&quot;)
+    private String url;
+
+    @Value(&quot;${cluster.datasource.username}&quot;)
+    private String username;
+
+    @Value(&quot;${cluster.datasource.password}&quot;)
+    private String password;
+
+    @Value(&quot;${cluster.datasource.driverClassName}&quot;)
+    private String driverClassName;
+
+    @Bean(name = &quot;clusterDataSource&quot;)
+    public DataSource clusterDataSource() {
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+        dataSource.setDriverClassName(driverClassName);
+        super.setDataSource(dataSource);
+        return dataSource;
+    }
+
+    @Bean(name = &quot;clusterTransactionManager&quot;)
+    public DataSourceTransactionManager clusterTransactionManager() {
+        return new DataSourceTransactionManager(clusterDataSource());
+    }
+
+    @Bean(name = &quot;clusterSqlSessionFactory&quot;)
+    public SqlSessionFactory clusterSqlSessionFactory () throws Exception {
+        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(clusterDataSource());
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources(ClusterDataSourceConfig.MAPPER_LOCATION));
+        return sessionFactory.getObject();
+    }
+}</code></pre><p>注意：配置多数据源时basePackages和MAPPER_LOCATION要区分开来，不能使用相同的，否则会有一个提示报错：Invalid bound statement (not found)</p>
+<p>查询Student使用主数据源：</p>
+<pre><code>com.fang.druid.mapper.master.StudentMapper
+resources/mapper/master/student.xml</code></pre><p>查询Course使用副数据源：</p>
+<pre><code>com.fang.druid.mapper.cluster.CourseMapper
+resources/mapper/cluster/course.xml</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/09/28/springboot配置多数据源/" data-id="ck13fle1r0001fwmbh4nnn070" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/28/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/09/28/springboot配置多数据源/">springboot配置多数据源</a>
+          </li>
+        
+          <li>
+            <a href="/2019/09/28/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 fang_xf<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
